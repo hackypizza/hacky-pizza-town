@@ -1,0 +1,64 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  phone         String   @unique
+  address       String
+  password      String?
+  role          String   @default("CUSTOMER") // 'SUPER_ADMIN' | 'STORE_MANAGER' | 'KITCHEN_STAFF' | 'RIDER' | 'CUSTOMER'
+  isActive      Boolean  @default(true)
+  walletBalance Float    @default(50.0) // Auto ₹50 bonus on creation
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orders        Order[]
+}
+
+model OtpVerification {
+  id         String   @id @default(cuid())
+  identifier String
+  otp        String
+  type       String   // 'SIGNUP' | 'LOGIN' | 'FORGOT_PASSWORD'
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id               String    @id @default(cuid())
+  orderNumber      String    @unique
+  customerName     String
+  phone            String
+  address          String
+  items            Json
+  subTotal         Float
+  walletDiscount   Float     @default(0.0)
+  totalAmount      Float
+  paymentMethod    String    @default("COD")
+  orderStatus      String    @default("PENDING") // 'PENDING' | 'ACCEPTED' | 'PREPARING' | 'READY_FOR_PICKUP' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'CANCELLED'
+  riderId          String?
+  riderName        String?
+  riderPhone       String?
+  cookingStartedAt DateTime?
+  readyAt          DateTime?
+  deliveredAt      DateTime?
+  userId           String?
+  user             User?     @relation(fields: [userId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}

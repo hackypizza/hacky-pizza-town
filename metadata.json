@@ -1,0 +1,6 @@
+{
+  "name": "Hacky Pizza Town",
+  "description": "Clean, responsive, mobile-first food ordering for Hacky Pizza Town - Mahmudabad Store. Fresh wood-fired pizzas, stuffed garlic breads, beverages, and desserts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
